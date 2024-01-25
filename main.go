@@ -3,7 +3,7 @@
 // - /previous: returns the previous number of the Fibonacci sequence, the sequence is not changed.
 // - /current: returns the current number of the Fibonacci sequence, the sequence is not changed.
 // - /next: returns the next number of the Fibonacci sequence and adds a new number to the sequence.
-// - /reset: resets the sequence to the beginning.
+// - /reset: resets the sequence to the beginning and returns the curent value.
 // - /make_trouble: causes a panic for testing reasons to check recovery.
 //
 // Example:
@@ -13,7 +13,7 @@
 // http://127.0.0.1:8080/next returns 2
 // http://127.0.0.1:8080/previous returns 1
 // http://127.0.0.1:8080/current returns 2
-// http://127.0.0.1:8080/reset and then http://127.0.0.1:8080/current returns 0
+// http://127.0.0.1:8080/reset returns 0
 
 package main
 
@@ -30,6 +30,7 @@ func main() {
 	router.GET("/next", getNext)
 	router.GET("/reset", reset)
 	router.GET("/make_trouble", func(c *gin.Context) {
+		c.String(200, "%s", "Server error, try again later")
 		panic("Oops, something went wrong")
 	})
 	router.Run() // listen and serve on 0.0.0.0:8080
@@ -64,4 +65,5 @@ func getNext(c *gin.Context) {
 func reset(c *gin.Context) {
 	previous = 0
 	current = 0
+	c.String(200, "%d", current)
 }
